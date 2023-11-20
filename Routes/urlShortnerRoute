@@ -1,0 +1,22 @@
+const express = require("express");
+const urlShortnerController = require("../Controllers/urlShortnerController");
+const auth = require("basic-auth");
+const authController = require("../Controllers/authController");
+
+const router = express.Router();
+
+function handleMethodNotAllowed(req, res) {
+  res.status(405).end(); // Send a 405 Method Not Allowed status
+}
+
+router
+  .route("/")
+  .post(authController.authenticate, urlShortnerController.createShortURL)
+  .all(handleMethodNotAllowed);
+
+router
+  .route("/history")
+  .get(authController.authenticate, urlShortnerController.getShortURLHistory)
+  .all(handleMethodNotAllowed);
+
+module.exports = router;
